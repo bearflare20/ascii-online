@@ -5,7 +5,9 @@ document.getElementById('fileInput').addEventListener('change', function(e) {
         reader.onload = function(event) {
             JSZip.loadAsync(event.target.result)
                 .then(function(zip) {
-                    const imageFiles = Object.values(zip.files).filter(file => !file.dir && /\.(jpe?g|png|gif)$/i.test(file.name));
+                    const outputDiv = document.getElementById('asciiOutput');
+                    outputDiv.innerHTML = ''; // Clear previous output
+                    const imageFiles = Object.values(zip.files).filter(file => /\.(jpe?g|png|gif)$/i.test(file.name));
                     imageFiles.forEach(function(imageFile) {
                         imageFile.async('blob').then(function(blob) {
                             const img = new Image();
@@ -19,9 +21,8 @@ document.getElementById('fileInput').addEventListener('change', function(e) {
                                 canvas.height = heightInput;
                                 ctx.drawImage(img, 0, 0, widthInput, heightInput);
 
-                                const imageData = ctx.getImageData(0, 0, widthInput, heightInput);
-                                const ascii = convertToASCII(imageData);
-                                displayASCII(ascii);
+                                const ascii = convertToASCII(ctx, widthInput, heightInput);
+                                displayASCII(outputDiv, imageFile.name, ascii);
                             };
                             img.src = URL.createObjectURL(blob);
                         });
@@ -37,14 +38,12 @@ document.getElementById('fileInput').addEventListener('change', function(e) {
     }
 });
 
-function convertToASCII(imageData) {
+function convertToASCII(ctx, width, height) {
     // ASCII conversion logic using specified height and width
-    // You'll need to adjust your ASCII conversion based on the user-defined dimensions
-    // This might involve mapping pixel brightness to ASCII characters or other methods
     // Replace this with your ASCII conversion logic
     return "ASCII Art for the image";
 }
 
-function displayASCII(ascii) {
-    document.getElementById('asciiOutput').innerText += ascii + '\n\n';
+function displayASCII(outputDiv, fileName, ascii) {
+    outputDiv.innerHTML += `<p>${fileName}:</p><pre>${ascii}</pre>`;
 }
