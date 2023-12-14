@@ -8,7 +8,11 @@ document.getElementById('convertButton').addEventListener('click', function() {
                 .then(function(zip) {
                     const outputDiv = document.getElementById('asciiOutput');
                     outputDiv.innerHTML = ''; // Clear previous output
-                    const imageFiles = Object.values(zip.files).filter(file => /\.(jpe?g|png|gif)$/i.test(file.name));
+                    let imageFiles = Object.values(zip.files).filter(file => /\.(jpe?g|png|gif)$/i.test(file.name));
+
+                    // Sort image files alphabetically by name
+                    imageFiles.sort((a, b) => a.name.localeCompare(b.name));
+
                     const zipASCII = new JSZip();
                     let asciiCount = 1;
 
@@ -34,13 +38,16 @@ document.getElementById('convertButton').addEventListener('click', function() {
                                     zipASCII.remove(/(\/|\\)*$/); // Remove empty file entry in ZIP
                                 }
                                 asciiCount++;
+
+                                // Trigger download after processing all images
+                                if (asciiCount > imageFiles.length) {
+                                    zipASCII.generateAsync({ type: 'blob' }).then(function(content) {
+                                        saveAs(content, 'ascii_art.zip'); // Trigger download of the generated ZIP file
+                                    });
+                                }
                             };
                             img.src = URL.createObjectURL(blob);
                         });
-                    });
-
-                    zipASCII.generateAsync({ type: 'blob' }).then(function(content) {
-                        saveAs(content, 'ascii_art.zip'); // Trigger download of the generated ZIP file
                     });
                 })
                 .catch(function(err) {
