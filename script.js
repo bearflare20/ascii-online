@@ -47,7 +47,7 @@ function displayError(message) {
 }
 
 function convertToASCII(ctx, width, height) {
-    const CHARACTERS = ['@', '#', '8', '&', 'o', ':', '*', '.', ' ']; // Characters representing different intensities
+    const CHARACTERS = ['@', '#', '8', '&', 'o', ':', '*', '.']; // Characters representing different intensities
     let ascii = '';
 
     for (let y = 0; y < height; y += 2) {
