@@ -8,6 +8,8 @@ document.getElementById('convertButton').addEventListener('click', function() {
                 .then(function(zip) {
                     const outputDiv = document.getElementById('asciiOutput');
                     outputDiv.innerHTML = ''; // Clear previous output
+                    const processedFilesDiv = document.getElementById('processedFiles');
+                    processedFilesDiv.innerHTML = ''; // Clear previous processed files display
                     let imageFiles = Object.values(zip.files).filter(file => /\.(jpe?g|png|gif)$/i.test(file.name));
 
                     // Sort image files alphabetically by name
@@ -38,6 +40,9 @@ document.getElementById('convertButton').addEventListener('click', function() {
                                     zipASCII.remove(/(\/|\\)*$/); // Remove empty file entry in ZIP
                                 }
                                 asciiCount++;
+
+                                // Display processed file name
+                                processedFilesDiv.innerHTML += `<p>Processed: ${imageFile.name}</p>`;
 
                                 // Trigger download after processing all images
                                 if (asciiCount > imageFiles.length) {
