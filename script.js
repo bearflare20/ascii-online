@@ -1,6 +1,6 @@
 document.getElementById('fileInput').addEventListener('change', function(e) {
     const file = e.target.files[0];
-    if (file.name.endsWith('.zip')) {
+    if (file && file.name.endsWith('.zip')) {
         const reader = new FileReader();
         reader.onload = function(event) {
             JSZip.loadAsync(event.target.result)
