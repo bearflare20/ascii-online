@@ -1,5 +1,8 @@
-document.getElementById('fileInput').addEventListener('change', function(e) {
-    const file = e.target.files[0];
+const fileInput = document.getElementById('fileInput');
+const convertButton = document.getElementById('convertButton');
+
+convertButton.addEventListener('click', function() {
+    const file = fileInput.files[0];
     if (file && file.name.endsWith('.zip')) {
         const reader = new FileReader();
         reader.onload = function(event) {
@@ -34,9 +37,14 @@ document.getElementById('fileInput').addEventListener('change', function(e) {
         };
         reader.readAsArrayBuffer(file);
     } else {
-        console.error('Please upload a ZIP file.');
+        displayError('Please select a valid ZIP file.');
     }
 });
+
+function displayError(message) {
+    const outputDiv = document.getElementById('asciiOutput');
+    outputDiv.innerHTML = `<p>Error: ${message}</p>`;
+}
 
 function convertToASCII(ctx, width, height) {
     // ASCII conversion logic using specified height and width
