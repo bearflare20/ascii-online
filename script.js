@@ -47,10 +47,23 @@ function displayError(message) {
 }
 
 function convertToASCII(ctx, width, height) {
-    // ASCII conversion logic using specified height and width
-    // Replace this with your ASCII conversion logic
-    return "ASCII Art for the image";
+    const CHARACTERS = ['@', '#', '8', '&', 'o', ':', '*', '.', ' ']; // Characters representing different intensities
+    let ascii = '';
+
+    for (let y = 0; y < height; y += 2) {
+        for (let x = 0; x < width; x++) {
+            const imageData = ctx.getImageData(x, y, 1, 2).data;
+            const brightness = (imageData[0] + imageData[1] + imageData[2]) / 3; // Calculate brightness
+
+            const index = Math.floor((brightness / 255) * (CHARACTERS.length - 1));
+            ascii += CHARACTERS[index];
+        }
+        ascii += '\n'; // Add line break for each row of ASCII characters
+    }
+
+    return ascii;
 }
+
 
 function displayASCII(outputDiv, fileName, ascii) {
     outputDiv.innerHTML += `<p>${fileName}:</p><pre>${ascii}</pre>`;
